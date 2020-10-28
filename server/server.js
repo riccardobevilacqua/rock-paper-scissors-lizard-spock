@@ -12,10 +12,10 @@ const io = socket(server);
 const activeUsers = new Set();
 
 io.on('connection', function (socket) {
-  socket.on('createPlayer', function (data) {
-    socket.userId = data;
-    activeUsers.add(data);
+  socket.on('createPlayer', function (userId) {
+    socket.userId = userId;
+    activeUsers.add(userId);
     io.emit('createPlayer', [...activeUsers]);
-    console.log('A user joined the server.');
+    console.log(`Player ${userId} joined the server.`);
   });
 });
