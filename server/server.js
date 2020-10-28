@@ -19,6 +19,11 @@ io.on('connection', function (socket) {
     console.log(`Player ${userId} joined.`);
   });
 
+  socket.on('setSelection', function (payload) {
+    const { selection, userName } = payload;
+    console.log(`${userName} selected ${selection}`);
+  });
+
   socket.on('disconnect', function () {
     activeUsers.delete(socket.userId);
     io.emit('leaveServer', socket.userId);

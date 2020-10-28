@@ -25,7 +25,7 @@ export const Client: React.FunctionComponent<{}> = () => {
   return (
     <>
       <div>Welcome, {userName}!</div>
-      <MoveSelector />
+      <MoveSelector socket={socket} userName={userName} />
     </>
   );
 };
