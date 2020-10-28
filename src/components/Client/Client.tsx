@@ -7,25 +7,19 @@ const socket = io();
 const generateRandomString = () => Math.random().toString(36).substring(2, 15) + performance.now().toString();
 
 export const Client: React.FunctionComponent<{}> = () => {
-  const [userName, setUserName] = useState('');
-
-  const createPlayer = () => {
-    const userId = generateRandomString();
-    const nick = `Player-${userId}`;
-    setUserName(nick);
-    socket.emit('joinServer', userId);
-  };
+  const [userId] = useState(generateRandomString());
 
   useEffect(() => {
-    if (userName.length === 0) {
-      createPlayer();
-    }
-  }, [userName]);
+    socket.emit('joinServer', userId);
+  },
+    // eslint-disable-next-line
+    []
+  );
 
   return (
     <>
-      <div>Welcome, {userName}!</div>
-      <MoveSelector socket={socket} userName={userName} />
+      <div>Welcome, Player-{userId}!</div>
+      <MoveSelector socket={socket} userId={userId} />
     </>
   );
 };

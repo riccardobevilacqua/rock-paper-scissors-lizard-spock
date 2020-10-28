@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react';
 
 const movesList: string[] = [
-  'Rock',
-  'Paper',
-  'Scissors',
-  'Lizard',
-  'Spock'
+  'rock',
+  'paper',
+  'scissors',
+  'lizard',
+  'spock'
 ];
 
 export interface MoveSelectorProps {
   socket: SocketIOClient.Socket;
-  userName: string;
+  userId: string;
 }
 
 export const MoveSelector: React.FunctionComponent<MoveSelectorProps> = ({
   socket,
-  userName,
+  userId,
 }: MoveSelectorProps) => {
   const [selection, setSelection] = useState('');
 
@@ -23,14 +23,14 @@ export const MoveSelector: React.FunctionComponent<MoveSelectorProps> = ({
     if (selection.length > 0) {
       console.log(selection);
       socket.emit('setSelection', {
+        userId,
         selection,
-        userName
       });
     }
   }, [
     selection,
     socket,
-    userName
+    userId
   ]);
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, item: string) => {
