@@ -12,10 +12,16 @@ const io = socket(server);
 const activeUsers = new Set();
 
 io.on('connection', function (socket) {
-  socket.on('createPlayer', function (userId) {
+  socket.on('joinServer', function (userId) {
     socket.userId = userId;
     activeUsers.add(userId);
-    io.emit('createPlayer', [...activeUsers]);
-    console.log(`Player ${userId} joined the server.`);
+    io.emit('joinServer', [...activeUsers]);
+    console.log(`Player ${userId} joined.`);
+  });
+
+  socket.on('leaveServer', function () {
+    activeUsers.delete(socket.userId);
+    io.emit('leaveServer', socket.userId);
+    console.log(`Player ${socket.userId} left.`);
   });
 });
