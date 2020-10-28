@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 
+import { MoveSelector } from '../MoveSelector/MoveSelector';
+
 const socket = io();
 const generateRandomString = () => Math.random().toString(36).substring(2, 15) + performance.now().toString();
 
@@ -11,7 +13,7 @@ export const Client: React.FunctionComponent<{}> = () => {
     const userId = generateRandomString();
     const nick = `Player-${userId}`;
     setUserName(nick);
-    socket.emit('createPlayer', userId);
+    socket.emit('joinServer', userId);
   };
 
   useEffect(() => {
@@ -23,6 +25,7 @@ export const Client: React.FunctionComponent<{}> = () => {
   return (
     <>
       <div>Welcome, {userName}!</div>
+      <MoveSelector />
     </>
   );
 };
