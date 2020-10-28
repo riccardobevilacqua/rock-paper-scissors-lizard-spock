@@ -7,12 +7,16 @@ const generateRandomString = () => Math.random().toString(36).substring(2, 15) +
 export const Client: React.FunctionComponent<{}> = () => {
   const [userName, setUserName] = useState('');
 
+  const createPlayer = () => {
+    const userId = generateRandomString();
+    const nick = `Player-${userId}`;
+    setUserName(nick);
+    socket.emit('createPlayer', userId);
+  };
+
   useEffect(() => {
     if (userName.length === 0) {
-      const userId = generateRandomString();
-      const nick = `Player-${userId}`;
-      setUserName(nick);
-      socket.emit('createPlayer', userId);
+      createPlayer();
     }
   }, [userName]);
 
