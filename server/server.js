@@ -19,7 +19,7 @@ io.on('connection', function (socket) {
     console.log(`Player ${userId} joined.`);
   });
 
-  socket.on('leaveServer', function () {
+  socket.on('disconnect', function () {
     activeUsers.delete(socket.userId);
     io.emit('leaveServer', socket.userId);
     console.log(`Player ${socket.userId} left.`);
