@@ -10,13 +10,7 @@ const server = app.listen(port, () => {
 
 const io = socket(server);
 const activeUsers = new Set();
-const currentSelections = {
-  rock: [],
-  paper: [],
-  scissors: [],
-  lizard: [],
-  spock: [],
-}
+let currentSelections = [];
 
 io.on('connection', function (socket) {
   socket.on('joinServer', function (userId) {
@@ -29,7 +23,13 @@ io.on('connection', function (socket) {
   socket.on('setSelection', function (payload) {
     if (!!payload) {
       const { userId, selection } = payload;
-      currentSelections[selection].push(userId);
+
+      currentSelections.push({ userId, selection });
+
+      if (activeUsers.size === currentSelections.length) {
+        io.emit('showSelections', currentSelections);
+        currentSelections = [];
+      }
 
       console.log(`Player-${userId} selected ${selection}`);
     }
