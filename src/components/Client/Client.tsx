@@ -28,7 +28,7 @@ export const Client: React.FunctionComponent<{}> = () => {
       <div>Welcome, Player-{userId}!</div>
       <MoveSelector socket={socket} userId={userId} />
       <div>
-        {currentSelections.map((item: any) => (<div>Player-{item.userId}: {item.selection}</div>))}
+        {currentSelections.map((item: any) => (<div>Player-{item.userId}: {item.selection} +{item.score} points</div>))}
       </div>
     </>
   );
