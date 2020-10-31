@@ -11,27 +11,35 @@ const movesList: string[] = [
 export interface MoveSelectorProps {
   socket: SocketIOClient.Socket;
   userId: string;
+  isRoundInProgress: boolean;
 }
 
 export const MoveSelector: React.FunctionComponent<MoveSelectorProps> = ({
   socket,
   userId,
+  isRoundInProgress,
 }: MoveSelectorProps) => {
   const [selection, setSelection] = useState('');
+  const [disabled, setDisabled] = useState(false);
 
   useEffect(() => {
     if (selection.length > 0) {
-      console.log(selection);
+      setDisabled(true);
       socket.emit('setSelection', {
         userId,
         selection,
       });
     }
-  }, [
-    selection,
-    socket,
-    userId
-  ]);
+  },
+    // eslint-disable-next-line
+    [selection]
+  );
+
+  useEffect(() => {
+    setDisabled(!isRoundInProgress);
+  },
+    [isRoundInProgress]
+  )
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, item: string) => {
     e.stopPropagation();
@@ -39,7 +47,7 @@ export const MoveSelector: React.FunctionComponent<MoveSelectorProps> = ({
   };
 
   const moves = movesList.map(item => (
-    <button onClick={e => handleClick(e, item)} key={item}>
+    <button onClick={e => handleClick(e, item)} key={item} disabled={disabled}>
       {item}
     </button>
   ));
