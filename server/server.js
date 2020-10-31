@@ -1,4 +1,3 @@
-const { group } = require('console');
 const express = require('express');
 const socket = require('socket.io');
 
@@ -13,8 +12,8 @@ const io = socket(server);
 const activeUsers = new Set();
 let currentSelections = [];
 
-const calculatePoints = () => {
-  const scores = [...currentSelections].reduce((acc, item) => {
+const calculatePoints = (input) => {
+  const scores = [...input].reduce((acc, item) => {
     acc[item.selection]++;
 
     return acc;
@@ -26,7 +25,7 @@ const calculatePoints = () => {
     spock: 0
   });
 
-  currentSelections = [...currentSelections].map(item => {
+  currentSelections = [...input].map(item => {
     switch (item.selection) {
       case 'rock':
         item.score = scores.scissors + scores.lizard;
@@ -70,7 +69,7 @@ io.on('connection', function (socket) {
       });
 
       if (activeUsers.size === currentSelections.length) {
-        calculatePoints();
+        calculatePoints(currentSelections);
         io.emit('showSelections', currentSelections);
 
         currentSelections = [];
