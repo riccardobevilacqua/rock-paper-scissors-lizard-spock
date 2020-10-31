@@ -10,9 +10,10 @@ const server = app.listen(port, () => {
 
 const io = socket(server);
 const activeUsers = new Set();
+let scoreBoard = [];
 let currentSelections = [];
 
-const calculatePoints = (input) => {
+const calculatePoints = input => {
   const scores = [...input].reduce((acc, item) => {
     acc[item.selection]++;
 
@@ -25,7 +26,7 @@ const calculatePoints = (input) => {
     spock: 0
   });
 
-  currentSelections = [...input].map(item => {
+  return [...input].map(item => {
     switch (item.selection) {
       case 'rock':
         item.score = scores.scissors + scores.lizard;
@@ -50,10 +51,26 @@ const calculatePoints = (input) => {
   });
 };
 
+const updateScoreBoard = () => {
+  const roundScores = calculatePoints(currentSelections);
+
+  if (roundScores.length > 0) {
+    scoreBoard = [...scoreBoard].map(item => {
+      item.score += roundScores.find(current => item.userId === current.userId).score;
+
+      return item;
+    });
+  }
+};
+
 io.on('connection', function (socket) {
   socket.on('joinServer', function (userId) {
     socket.userId = userId;
     activeUsers.add(userId);
+    scoreBoard.push({
+      userId,
+      score: 0
+    });
     io.emit('joinServer', [...activeUsers]);
     console.log(`Player-${userId} joined.`);
   });
@@ -69,8 +86,11 @@ io.on('connection', function (socket) {
       });
 
       if (activeUsers.size === currentSelections.length) {
-        calculatePoints(currentSelections);
-        io.emit('showSelections', currentSelections);
+        updateScoreBoard();
+        io.emit('showSelections', {
+          currentSelections,
+          scoreBoard
+        });
 
         currentSelections = [];
       }

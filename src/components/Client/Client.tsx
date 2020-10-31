@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 
 import { MoveSelector } from '../MoveSelector/MoveSelector';
+import { ScoreBoard } from '../ScoreBoard/ScoreBoard';
 
 const socket = io();
 const generateRandomString = () => Math.random().toString(36).substring(2, 15) + performance.now().toString();
@@ -9,7 +10,7 @@ const generateRandomString = () => Math.random().toString(36).substring(2, 15) +
 export const Client: React.FunctionComponent<{}> = () => {
   const [userId] = useState(generateRandomString());
   const [currentSelections, setCurrentSelections] = useState([]);
-  const [playerList, setPlayerList] = useState([]);
+  const [scores, setScores] = useState([]);
   const [isRoundInProgress, setIsRoundInProgress] = useState(true);
 
   useEffect(() => {
@@ -21,14 +22,10 @@ export const Client: React.FunctionComponent<{}> = () => {
 
   socket.on('showSelections', function (data: any) {
     if (!!data) {
+      console.info(data);
       setIsRoundInProgress(false);
-      setCurrentSelections(data);
-    }
-  });
-
-  socket.on('joinServer', function (data: any) {
-    if (!!data) {
-      setPlayerList(data);
+      setCurrentSelections(data.currentSelections);
+      setScores(data.scoreBoard);
     }
   });
 
@@ -39,14 +36,11 @@ export const Client: React.FunctionComponent<{}> = () => {
       <MoveSelector socket={socket} userId={userId} isRoundInProgress={isRoundInProgress} />
       <div>
         {currentSelections.map((item: any) => (
-          <div>Player-{item.userId}: {item.selection} {item.score > 0 ? `+${item.score}` : ''}</div>
+          <div>Player-{item.userId}: {item.selection} {item.score > 0 ? `+${item.score} points` : ''}</div>
         ))}
       </div>
       <div>
-        <h3>Players</h3>
-        <ol>
-          {playerList.map((item: any) => (<li key={item}>Player-${item}</li>))}
-        </ol>
+        <ScoreBoard scores={scores} />
       </div>
     </>
   );
