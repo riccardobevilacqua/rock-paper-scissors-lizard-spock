@@ -71,7 +71,7 @@ io.on('connection', function (socket) {
       userId,
       score: 0
     });
-    io.emit('joinServer', [...activeUsers]);
+    io.emit('joinServer', scoreBoard);
     console.log(`Player-${userId} joined.`);
   });
 

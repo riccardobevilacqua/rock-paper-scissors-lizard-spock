@@ -20,6 +20,12 @@ export const Client: React.FunctionComponent<{}> = () => {
     []
   );
 
+  socket.on('joinServer', function (data: any) {
+    if (!!data) {
+      setScores(data);
+    }
+  });
+
   socket.on('showSelections', function (data: any) {
     if (!!data) {
       console.info(data);
