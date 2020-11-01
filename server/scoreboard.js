@@ -36,9 +36,11 @@ const calculateScores = input => {
   });
 };
 
+const sortByScore = (a, b) => b.score - a.score;
+
 const updateScoreBoard = ({
   currentSelections,
-  scoreBoard,
+  scoreBoard
 }) => {
   const roundScores = calculateScores(currentSelections);
 
@@ -46,11 +48,13 @@ const updateScoreBoard = ({
     return scoreBoard;
   }
 
-  return [...scoreBoard].map(item => {
-    item.score += roundScores.find(current => item.userId === current.userId).score;
+  return [...scoreBoard]
+    .map(item => {
+      item.score += roundScores.find(current => item.userId === current.userId).score;
 
-    return item;
-  });
+      return item;
+    })
+    .sort(sortByScore);
 };
 
 module.exports = { updateScoreBoard };

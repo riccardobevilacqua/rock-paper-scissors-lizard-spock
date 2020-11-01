@@ -11,7 +11,7 @@ const server = app.listen(port, () => {
 });
 
 const io = socket(server);
-// const victoryThreshold = 5;
+const victoryThreshold = 3;
 let scoreBoard = [];
 let currentSelections = [];
 
@@ -20,7 +20,8 @@ io.on('connection', function (socket) {
     socket.userId = userId;
     scoreBoard.push({
       userId,
-      score: 0
+      score: 0,
+      isWinner: false
     });
     io.emit('joinServer', scoreBoard);
     console.log(`Player-${userId} joined.`);
@@ -41,9 +42,11 @@ io.on('connection', function (socket) {
           currentSelections,
           scoreBoard,
         });
-        io.emit('showSelections', {
+        const winner = scoreBoard[0].score >= victoryThreshold ? scoreBoard[0].userId : null;
+        io.emit('endRound', {
           currentSelections,
-          scoreBoard
+          scoreBoard,
+          winner,
         });
 
         currentSelections = [];

@@ -15,6 +15,7 @@ export const Client: React.FunctionComponent<{}> = () => {
   const [currentSelections, setCurrentSelections] = useState([]);
   const [scores, setScores] = useState<PlayerScore[]>([]);
   const [isRoundInProgress, setIsRoundInProgress] = useState(true);
+  const [winner, setWinner] = useState(null);
 
   useEffect(() => {
     socket.emit('joinServer', userId);
@@ -36,18 +37,19 @@ export const Client: React.FunctionComponent<{}> = () => {
     }
   });
 
-  socket.on('showSelections', function (data: any) {
+  socket.on('endRound', function (data: any) {
     if (!!data) {
       setIsRoundInProgress(false);
       setCurrentSelections(data.currentSelections);
       setScores(data.scoreBoard);
+      setWinner(data.winner);
       nextRound();
     }
   });
 
   return (
     <>
-      <div>Welcome, Player-{userId}!</div>
+      <div>Welcome, Player-{userId}</div>
       <div>Round {isRoundInProgress ? 'in progress' : 'is over'}</div>
       <MoveSelector socket={socket} userId={userId} isRoundInProgress={isRoundInProgress} />
       <div>
@@ -56,7 +58,7 @@ export const Client: React.FunctionComponent<{}> = () => {
         ))}
       </div>
       <div>
-        <ScoreBoard scores={scores} />
+        <ScoreBoard scores={scores} winner={winner} />
       </div>
     </>
   );
