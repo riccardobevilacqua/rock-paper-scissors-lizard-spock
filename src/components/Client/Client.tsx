@@ -6,6 +6,8 @@ import { ScoreBoard } from '../ScoreBoard/ScoreBoard';
 
 const socket = io();
 const generateRandomString = () => Math.random().toString(36).substring(2, 15) + performance.now().toString();
+// time between two rounds (ms)
+const roundTransitionTime = 2000;
 
 export const Client: React.FunctionComponent<{}> = () => {
   const [userId] = useState(generateRandomString());
@@ -28,10 +30,13 @@ export const Client: React.FunctionComponent<{}> = () => {
 
   socket.on('showSelections', function (data: any) {
     if (!!data) {
-      console.info(data);
       setIsRoundInProgress(false);
       setCurrentSelections(data.currentSelections);
       setScores(data.scoreBoard);
+      setTimeout(() => {
+        setCurrentSelections([]);
+        setIsRoundInProgress(true);
+      }, roundTransitionTime);
     }
   });
 
@@ -42,7 +47,7 @@ export const Client: React.FunctionComponent<{}> = () => {
       <MoveSelector socket={socket} userId={userId} isRoundInProgress={isRoundInProgress} />
       <div>
         {currentSelections.map((item: any) => (
-          <div>Player-{item.userId}: {item.selection} {item.score > 0 ? `+${item.score} points` : ''}</div>
+          <div key={item.userId}>Player-{item.userId}: {item.selection} {item.score > 0 ? `+${item.score} points` : ''}</div>
         ))}
       </div>
       <div>
