@@ -1,6 +1,8 @@
 const express = require('express');
 const socket = require('socket.io');
 
+const { calculatePoints } = require('./calculatePoints');
+
 const port = 4000;
 const app = express();
 
@@ -9,47 +11,9 @@ const server = app.listen(port, () => {
 });
 
 const io = socket(server);
-const activeUsers = new Set();
+// const victoryThreshold = 5;
 let scoreBoard = [];
 let currentSelections = [];
-
-const calculatePoints = input => {
-  const scores = [...input].reduce((acc, item) => {
-    acc[item.selection]++;
-
-    return acc;
-  }, {
-    rock: 0,
-    paper: 0,
-    scissors: 0,
-    lizard: 0,
-    spock: 0
-  });
-
-  return [...input].map(item => {
-    switch (item.selection) {
-      case 'rock':
-        item.score = scores.scissors + scores.lizard;
-        break;
-      case 'paper':
-        item.score = scores.rock + scores.spock;
-        break;
-      case 'scissors':
-        item.score = scores.paper + scores.lizard;
-        break;
-      case 'lizard':
-        item.score = scores.paper + scores.spock;
-        break;
-      case 'spock':
-        item.score = scores.rock + scores.scissors;
-        break;
-      default:
-        item.score = 0;
-    };
-
-    return item;
-  });
-};
 
 const updateScoreBoard = () => {
   const roundScores = calculatePoints(currentSelections);
@@ -66,7 +30,6 @@ const updateScoreBoard = () => {
 io.on('connection', function (socket) {
   socket.on('joinServer', function (userId) {
     socket.userId = userId;
-    activeUsers.add(userId);
     scoreBoard.push({
       userId,
       score: 0
@@ -85,7 +48,7 @@ io.on('connection', function (socket) {
         score: 0
       });
 
-      if (activeUsers.size === currentSelections.length) {
+      if (scoreBoard.length === currentSelections.length) {
         updateScoreBoard();
         io.emit('showSelections', {
           currentSelections,
@@ -100,7 +63,7 @@ io.on('connection', function (socket) {
   });
 
   socket.on('disconnect', function () {
-    activeUsers.delete(socket.userId);
+    scoreBoard = [...scoreBoard].filter(item => item.userId !== socket.userId);
     io.emit('leaveServer', socket.userId);
     console.log(`Player-${socket.userId} left.`);
   });
