@@ -30,6 +30,7 @@ export const ScoreBoard: React.FunctionComponent<ScoreBoardProps> = (props: Scor
             <th>Position</th>
             <th>Player</th>
             <th>Score</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -37,7 +38,8 @@ export const ScoreBoard: React.FunctionComponent<ScoreBoardProps> = (props: Scor
             <tr key={item.userId}>
               <td>{index + 1}</td>
               <td>Player-{item.userId}</td>
-              <td>{item.score} {props.winner === item.userId ? 'WINNER' : ''}</td>
+              <td>{item.score}</td>
+              <td>{props.winner === item.userId ? 'WINNER' : ''}</td>
             </tr>
           ))}
         </tbody>
