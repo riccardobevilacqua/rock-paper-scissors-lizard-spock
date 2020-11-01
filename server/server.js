@@ -1,7 +1,7 @@
 const express = require('express');
 const socket = require('socket.io');
 
-const { calculatePoints } = require('./calculatePoints');
+const { updateScoreBoard } = require('./scoreboard');
 
 const port = 4000;
 const app = express();
@@ -14,18 +14,6 @@ const io = socket(server);
 // const victoryThreshold = 5;
 let scoreBoard = [];
 let currentSelections = [];
-
-const updateScoreBoard = () => {
-  const roundScores = calculatePoints(currentSelections);
-
-  if (roundScores.length > 0) {
-    scoreBoard = [...scoreBoard].map(item => {
-      item.score += roundScores.find(current => item.userId === current.userId).score;
-
-      return item;
-    });
-  }
-};
 
 io.on('connection', function (socket) {
   socket.on('joinServer', function (userId) {
@@ -49,7 +37,10 @@ io.on('connection', function (socket) {
       });
 
       if (scoreBoard.length === currentSelections.length) {
-        updateScoreBoard();
+        updateScoreBoard({
+          currentSelections,
+          scoreBoard,
+        });
         io.emit('showSelections', {
           currentSelections,
           scoreBoard

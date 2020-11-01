@@ -1,4 +1,4 @@
-exports.calculatePoints = input => {
+const calculatePoints = input => {
   const scores = [...input].reduce((acc, item) => {
     acc[item.selection]++;
 
@@ -35,3 +35,20 @@ exports.calculatePoints = input => {
     return item;
   });
 };
+
+const updateScoreBoard = ({
+  currentSelections,
+  scoreBoard,
+}) => {
+  const roundScores = calculatePoints(currentSelections);
+
+  if (roundScores.length > 0) {
+    scoreBoard = [...scoreBoard].map(item => {
+      item.score += roundScores.find(current => item.userId === current.userId).score;
+
+      return item;
+    });
+  }
+};
+
+module.exports = { updateScoreBoard };
