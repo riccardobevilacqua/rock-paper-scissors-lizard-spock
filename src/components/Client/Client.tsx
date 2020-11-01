@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 
+import { generateUserId } from '../../utils/utils';
 import { MoveSelector } from '../MoveSelector/MoveSelector';
-import { ScoreBoard } from '../ScoreBoard/ScoreBoard';
+import { ScoreBoard, PlayerScore } from '../ScoreBoard/ScoreBoard';
 
 const socket = io();
-const generateRandomString = () => Math.random().toString(36).substring(2, 15) + performance.now().toString();
-// time between two rounds (ms)
+const userId = generateUserId();
+
+// Time between two rounds (ms)
 const roundTransitionTime = 2000;
 
 export const Client: React.FunctionComponent<{}> = () => {
-  const [userId] = useState(generateRandomString());
   const [currentSelections, setCurrentSelections] = useState([]);
-  const [scores, setScores] = useState([]);
+  const [scores, setScores] = useState<PlayerScore[]>([]);
   const [isRoundInProgress, setIsRoundInProgress] = useState(true);
 
   useEffect(() => {
@@ -22,7 +23,14 @@ export const Client: React.FunctionComponent<{}> = () => {
     []
   );
 
-  socket.on('joinServer', function (data: any) {
+  const nextRound = () => {
+    setTimeout(() => {
+      setCurrentSelections([]);
+      setIsRoundInProgress(true);
+    }, roundTransitionTime);
+  }
+
+  socket.on('joinServer', function (data: PlayerScore[]) {
     if (!!data) {
       setScores(data);
     }
@@ -33,10 +41,7 @@ export const Client: React.FunctionComponent<{}> = () => {
       setIsRoundInProgress(false);
       setCurrentSelections(data.currentSelections);
       setScores(data.scoreBoard);
-      setTimeout(() => {
-        setCurrentSelections([]);
-        setIsRoundInProgress(true);
-      }, roundTransitionTime);
+      nextRound();
     }
   });
 
