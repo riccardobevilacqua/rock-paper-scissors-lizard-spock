@@ -37,7 +37,7 @@ io.on('connection', function (socket) {
       });
 
       if (scoreBoard.length === currentSelections.length) {
-        updateScoreBoard({
+        scoreBoard = updateScoreBoard({
           currentSelections,
           scoreBoard,
         });
