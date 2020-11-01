@@ -42,8 +42,11 @@ export const Client: React.FunctionComponent<{}> = () => {
       setIsRoundInProgress(false);
       setCurrentSelections(data.currentSelections);
       setScores(data.scoreBoard);
-      setWinner(data.winner);
-      nextRound();
+      if (!!data.winner) {
+        setWinner(data.winner);
+      } else {
+        nextRound();
+      }
     }
   });
 
