@@ -25,12 +25,14 @@ export const ScoreBoard: React.FunctionComponent<ScoreBoardProps> = (props: Scor
       <h3>Scores</h3>
       <table>
         <thead>
-          <th>Position</th>
-          <th>Player</th>
-          <th>Score</th>
+          <tr>
+            <th>Position</th>
+            <th>Player</th>
+            <th>Score</th>
+          </tr>
         </thead>
         <tbody>
-          {scores.map((item: any, index: number) => (
+          {scores.map((item: PlayerScore, index: number) => (
             <tr key={item.userId}>
               <td>{index + 1}</td>
               <td>Player-{item.userId}</td>
