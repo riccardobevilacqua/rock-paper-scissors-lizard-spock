@@ -4,7 +4,13 @@
   align-items: center;
 }
 
+.move-selector figure.is-clickable {
+  opacity: 1;
+  transition: opacity 0.5s;
+}
+
 .move-selector figure.is-disabled {
   opacity: 0.4;
+  transition: opacity 0.5s;
   cursor: default;
 }
