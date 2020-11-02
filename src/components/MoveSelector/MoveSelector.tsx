@@ -1,11 +1,38 @@
 import React, { useState, useEffect } from 'react';
 
-const movesList: string[] = [
-  'rock',
-  'paper',
-  'scissors',
-  'lizard',
-  'spock'
+import rockSVG from './img/rock.svg';
+import paperSVG from './img/paper.svg';
+import scissorsSVG from './img/scissors.svg';
+import lizardSVG from './img/lizard.svg';
+import spockSVG from './img/spock.svg';
+import './MoveSelector.scss';
+
+export interface Move {
+  name: string;
+  image: string;
+}
+
+const movesList: Move[] = [
+  {
+    name: 'rock',
+    image: rockSVG,
+  },
+  {
+    name: 'paper',
+    image: paperSVG,
+  },
+  {
+    name: 'scissors',
+    image: scissorsSVG,
+  },
+  {
+    name: 'lizard',
+    image: lizardSVG,
+  },
+  {
+    name: 'spock',
+    image: spockSVG,
+  }
 ];
 
 export interface MoveSelectorProps {
@@ -20,6 +47,7 @@ export const MoveSelector: React.FunctionComponent<MoveSelectorProps> = ({
   isRoundInProgress,
 }: MoveSelectorProps) => {
   const [selection, setSelection] = useState('');
+  // eslint-disable-next-line
   const [disabled, setDisabled] = useState(false);
 
   useEffect(() => {
@@ -41,20 +69,29 @@ export const MoveSelector: React.FunctionComponent<MoveSelectorProps> = ({
     [isRoundInProgress]
   )
 
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, item: string) => {
+  const handleClick = (e: React.MouseEvent, item: string) => {
     e.stopPropagation();
-    setSelection(item);
+    if (!disabled) {
+      console.log(`Selected: ${item}`);
+      setSelection(item);
+    }
   };
 
-  const moves = movesList.map(item => (
-    <button className="button" onClick={e => handleClick(e, item)} key={item} disabled={disabled}>
-      {item}
-    </button>
-  ));
+  const moves = movesList.map(item => {
+    const { name, image } = item;
+    // <button className="button" onClick={e => handleClick(e, item)} key={item} disabled={disabled}>
+    //   {item}
+    // </button>
+    return (
+      <figure className="image is-128x128 is-clickable" onClick={e => handleClick(e, name)} key={name}>
+        <img src={image} alt={name} />
+      </figure>
+    );
+  });
 
   return (
-    <>
+    <div className="move-selector">
       {moves}
-    </>
+    </div>
   );
 };
