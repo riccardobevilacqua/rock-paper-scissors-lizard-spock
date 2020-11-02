@@ -83,7 +83,7 @@ export const MoveSelector: React.FunctionComponent<MoveSelectorProps> = ({
     //   {item}
     // </button>
     return (
-      <figure className="image is-128x128 is-clickable" onClick={e => handleClick(e, name)} key={name}>
+      <figure className={['image', 'is-128x128', disabled ? 'is-disabled' : 'is-clickable'].join(' ')} onClick={e => handleClick(e, name)} key={name}>
         <img src={image} alt={name} />
       </figure>
     );
