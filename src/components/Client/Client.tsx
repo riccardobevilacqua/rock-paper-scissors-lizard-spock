@@ -6,6 +6,12 @@ import { MoveSelector } from '../MoveSelector/MoveSelector';
 import { ScoreBoard } from '../ScoreBoard/ScoreBoard';
 import { PlayerScore } from '../ScoreCard/ScoreCard';
 
+export interface MoveSelection {
+  userId: string;
+  selection: string;
+  score: number;
+}
+
 const socket = io();
 const userId = generateUserId();
 
@@ -13,7 +19,8 @@ const userId = generateUserId();
 const roundTransitionTime = 2000;
 
 export const Client: React.FunctionComponent<{}> = () => {
-  const [currentSelections, setCurrentSelections] = useState([]);
+  // eslint-disable-next-line
+  const [currentSelections, setCurrentSelections] = useState<MoveSelection[]>([]);
   const [scores, setScores] = useState<PlayerScore[]>([]);
   const [isRoundInProgress, setIsRoundInProgress] = useState(true);
   const [winner, setWinner] = useState(null);
@@ -54,13 +61,7 @@ export const Client: React.FunctionComponent<{}> = () => {
   return (
     <>
       <div>Welcome, Player-{userId}</div>
-      <div>Round {isRoundInProgress ? 'in progress' : 'is over'}</div>
       <MoveSelector socket={socket} userId={userId} isRoundInProgress={isRoundInProgress} />
-      <div>
-        {currentSelections.map((item: any) => (
-          <div key={item.userId}>Player-{item.userId}: {item.selection} {item.score > 0 ? `+${item.score} points` : ''}</div>
-        ))}
-      </div>
       <div>
         <ScoreBoard scores={scores} winner={winner} />
       </div>
