@@ -79,9 +79,7 @@ export const MoveSelector: React.FunctionComponent<MoveSelectorProps> = ({
 
   const moves = movesList.map(item => {
     const { name, image } = item;
-    // <button className="button" onClick={e => handleClick(e, item)} key={item} disabled={disabled}>
-    //   {item}
-    // </button>
+
     return (
       <figure className={['image', 'is-64x64', disabled ? 'is-disabled' : 'is-clickable'].join(' ')} onClick={e => handleClick(e, name)} key={name}>
         <img src={image} alt={name} />
