@@ -58,12 +58,29 @@ export const Client: React.FunctionComponent<{}> = () => {
     }
   });
 
+  socket.on('restartGame', function (data: any) {
+    if (!!data) {
+      setIsRoundInProgress(true);
+      setScores(data.scoreBoard);
+      setCurrentSelections([]);
+      setWinner(null);
+    }
+  });
+
+  const handlePlayAgain = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.stopPropagation();
+    socket.emit('playAgain');
+  };
+
   return (
     <>
       <div>Welcome, Player-{userId}</div>
-      <MoveSelector socket={socket} userId={userId} isRoundInProgress={isRoundInProgress} />
       <div>
+        <MoveSelector socket={socket} userId={userId} isRoundInProgress={isRoundInProgress} />
         <ScoreBoard scores={scores} winner={winner} />
+      </div>
+      <div className={winner ? '' : 'is-hidden'}>
+        <button className="button" onClick={e => handlePlayAgain(e)}>Play again</button>
       </div>
     </>
   );
