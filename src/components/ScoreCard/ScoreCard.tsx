@@ -23,8 +23,10 @@ export const ScoreCard: React.FunctionComponent<ScoreCardProps> = ({
         <div className="media-content">
           <div className="content">
             <p>Player-{playerScore.userId}</p>
-            <p>{playerScore.score}</p>
           </div>
+        </div>
+        <div className="media-right">
+          <p>{playerScore.score}</p>
         </div>
       </article>
     </div>
