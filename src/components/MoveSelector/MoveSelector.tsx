@@ -47,7 +47,7 @@ export const MoveSelector: React.FunctionComponent<MoveSelectorProps> = ({
   };
 
   const moves = movesList.map(item => (
-    <button onClick={e => handleClick(e, item)} key={item} disabled={disabled}>
+    <button className="button" onClick={e => handleClick(e, item)} key={item} disabled={disabled}>
       {item}
     </button>
   ));

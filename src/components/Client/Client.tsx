@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 
-import { generateUserId, generateAvatar } from '../../utils/utils';
+import { generateUserId } from '../../utils/utils';
 import { MoveSelector } from '../MoveSelector/MoveSelector';
-import { ScoreBoard, PlayerScore } from '../ScoreBoard/ScoreBoard';
+import { ScoreBoard } from '../ScoreBoard/ScoreBoard';
+import { PlayerScore } from '../ScoreCard/ScoreCard';
 
 const socket = io();
 const userId = generateUserId();
-const avatar = generateAvatar(userId);
 
 // Time between two rounds (ms)
 const roundTransitionTime = 2000;
@@ -19,10 +19,7 @@ export const Client: React.FunctionComponent<{}> = () => {
   const [winner, setWinner] = useState(null);
 
   useEffect(() => {
-    socket.emit('joinServer', {
-      userId,
-      avatar,
-    });
+    socket.emit('joinServer', { userId });
   },
     // eslint-disable-next-line
     []

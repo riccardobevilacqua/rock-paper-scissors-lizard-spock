@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-export interface PlayerScore {
-  userId: string;
-  score: number;
-}
+import { ScoreCard, PlayerScore } from '../ScoreCard/ScoreCard';
 
 export interface ScoreBoardProps {
   scores: PlayerScore[];
@@ -21,29 +18,18 @@ export const ScoreBoard: React.FunctionComponent<ScoreBoardProps> = (props: Scor
     [props.scores]
   );
 
+  // <tr key={item.userId}>
+  //   <td>{index + 1}</td>
+  //   <td>Player-{item.userId}</td>
+  //   <td>{item.score}</td>
+  //   <td>{props.winner === item.userId ? 'WINNER' : ''}</td>
+  // </tr>
+
   return (
     <>
-      <h3>Scores</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Position</th>
-            <th>Player</th>
-            <th>Score</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {scores.map((item: PlayerScore, index: number) => (
-            <tr key={item.userId}>
-              <td>{index + 1}</td>
-              <td>Player-{item.userId}</td>
-              <td>{item.score}</td>
-              <td>{props.winner === item.userId ? 'WINNER' : ''}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {scores.map((item: PlayerScore) => (
+        <ScoreCard playerScore={item} key={item.userId} />
+      ))}
     </>
   );
 };

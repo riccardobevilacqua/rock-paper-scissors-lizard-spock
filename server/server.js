@@ -17,11 +17,10 @@ let currentSelections = [];
 
 io.on('connection', function (socket) {
   socket.on('joinServer', function (payload) {
-    const { userId, avatar } = payload;
+    const { userId } = payload;
     socket.userId = userId;
     scoreBoard.push({
       userId,
-      avatar,
       score: 0,
       isWinner: false
     });
