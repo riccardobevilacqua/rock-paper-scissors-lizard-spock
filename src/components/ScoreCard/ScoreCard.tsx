@@ -5,6 +5,7 @@ import { Avatar } from '../Avatar/Avatar';
 export interface PlayerScore {
   userId: string;
   score: number;
+  isWinner: boolean;
 }
 
 export interface ScoreCardProps {
